@@ -9,13 +9,15 @@ const decor = [
 ];
 const tronc = [
   //     2    3    4    5    6    7    8    9   10   11   12   13   14
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   ["R", "R", "R", "R", " ", " ", " ", " ", " ", "R", "R", "R", " ", " "],
-  ["L", "L", "L", "L", " ", " ", " ", " ", " ", "L", "L", "L", " ", " "],
+  [" ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " ", " "],
   [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " "],
+  [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
 ];
 
 let joueur = { x: 6, y: 5 };
+let delaiTronc = 0;
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -27,6 +29,7 @@ function genererDecorHTML() {
   let decorHTML = "";
   let classe = "";
   const table = document.createElement("table");
+  table.setAttribute("id", "tableau");
   for (let y = 0; y < decor.length; y++) {
     const row = document.createElement("tr");
     for (let x = 0; x < decor[y].length; x++) {
@@ -47,6 +50,7 @@ function genererDecorHTML() {
         default:
           cell.classList.add("berge");
       }
+      cell.setAttribute("id", "cell-" + y + "-" + x);
       if (x == joueur.x && y == joueur.y) {
         const texte = document.createTextNode("X");
         cell.appendChild(texte);
@@ -60,16 +64,26 @@ function genererDecorHTML() {
 }
 
 function deplacerTroncs() {
-  // console.log("déplacement enemis");
-  // const decorContainer = document.getElementById("contenu");
-  // let classe = "";
-  // const table = document.createElement("table");
-  // for (let y = 0; y < decor.length; y++) {
-  //   const row = document.createElement("tr");
-  //   for (let x = 0; x < decor[y].length; x++) {
-  //     const cell = document.createElement("td");
-  //   }
-  // }
+  for (let y = 0; y < tronc.length; y++) {
+    for (let x = 0; x < tronc[y].length; x++) {
+      if (tronc[y][x] == "L") {
+        let cell = document.getElementById("cell-" + y + "-" + x);
+        cell.classList.add("tronc");
+      }
+    }
+  }
+  delaiTronc++;
+  if (delaiTronc == 20) {
+    for (let y = 0; y < tronc.length; y++) {
+      for (let x = 0; x < tronc[y].length; x++) {
+        if (tronc[y][x] == "L") {
+          tronc[y][x - 1] = "L";
+          tronc[y][x] = " ";
+        }
+      }
+    }
+    delaiTronc = 0;
+  }
 }
 
 // Fonction pour gérer les mouvements du joueur
@@ -89,6 +103,7 @@ function deplacerJoueur(direction) {
       nouveauX--;
       break;
     case "ArrowRight":
+      tronc;
       nouveauX++;
       break;
     default:
