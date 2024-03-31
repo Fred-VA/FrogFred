@@ -26,8 +26,6 @@ function genererDecorHTML() {
   if (decorContainer.firstChild) {
     decorContainer.removeChild(decorContainer.firstChild);
   }
-  let decorHTML = "";
-  let classe = "";
   const table = document.createElement("table");
   table.setAttribute("id", "tableau");
   for (let y = 0; y < decor.length; y++) {
