@@ -1,5 +1,5 @@
 const decor = [
-  //     2    3    4    5    6    7    8    9   10   11   12   13   14
+  //     1    2    3    4    5    6    7    8    9   10   11   12   13
   ["F", "N", "F", "F", "F", "N", "F", "F", "F", "N", "F", "F", "F", "N"],
   ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
   ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
@@ -8,11 +8,11 @@ const decor = [
   ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
 ];
 const tronc = [
-  //     2    3    4    5    6    7    8    9   10   11   12   13   14
+  //     1    2    3    4    5    6    7    8    9   10   11   12   13
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   ["R", "R", "R", "R", " ", " ", " ", " ", " ", "R", "R", "R", " ", " "],
   [" ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " ", " "],
-  [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", "R", "R", "R", " "],
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
 ];
 
@@ -70,15 +70,35 @@ function deplacerTroncs() {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
       }
+      if (tronc[y][x] == "R") {
+        let cell = document.getElementById("cell-" + y + "-" + x);
+        cell.classList.add("tronc");
+      }
     }
   }
   delaiTronc++;
-  if (delaiTronc == 20) {
+  if (delaiTronc == 80) {
     for (let y = 0; y < tronc.length; y++) {
       for (let x = 0; x < tronc[y].length; x++) {
         if (tronc[y][x] == "L") {
           tronc[y][x - 1] = "L";
           tronc[y][x] = " ";
+          if (joueur.x == x && joueur.y == y) {
+            joueur.x = joueur.x - 1;
+          }
+        }
+      }
+    }
+    for (let y = 0; y < tronc.length; y++) {
+      for (let x = 13; x >= 0; x--) {
+        if (tronc[y][x] == "R") {
+          if (x < 13) {
+            tronc[y][x + 1] = "R";
+          }
+          tronc[y][x] = " ";
+          if (joueur.x == x && joueur.y == y) {
+            joueur.x = joueur.x + 1;
+          }
         }
       }
     }
