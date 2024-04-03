@@ -16,7 +16,7 @@ const tronc = [
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
 ];
 
-let joueur = { x: 6, y: 5 };
+let joueur = { x: 6, y: 5, vivant: true };
 let delaiTronc = 0;
 
 // Fonction pour générer le décor en HTML
@@ -75,29 +75,45 @@ function deplacerTroncs() {
     }
   }
   delaiTronc++;
-  if (delaiTronc == 80) {
+  if (delaiTronc == 90) {
+    let goToEnd = false;
     for (let y = 0; y < tronc.length; y++) {
+      goToEnd = false;
       for (let x = 0; x < tronc[y].length; x++) {
         if (tronc[y][x] == "L") {
-          tronc[y][x - 1] = "L";
+          if (x > 0) {
+            tronc[y][x - 1] = "L";
+          } else {
+            goToEnd = true;
+          }
           tronc[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x - 1;
           }
         }
       }
+      if (goToEnd) {
+        tronc[y][13] = "L";
+      }
     }
+    let goToStart = false;
     for (let y = 0; y < tronc.length; y++) {
+      goToStart = false;
       for (let x = 13; x >= 0; x--) {
         if (tronc[y][x] == "R") {
           if (x < 13) {
             tronc[y][x + 1] = "R";
+          } else {
+            goToStart = true;
           }
           tronc[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x + 1;
           }
         }
+      }
+      if (goToStart) {
+        tronc[y][0] = "R";
       }
     }
     delaiTronc = 0;
@@ -129,6 +145,19 @@ function deplacerJoueur(direction) {
   }
   joueur.x = nouveauX;
   joueur.y = nouveauY;
+  let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
+  if (cell.classList.contains("tronc") || cell.classList.contains("berge")) {
+    joueur.vivant = true;
+  } else {
+    joueur.vivant = false;
+    let messageDiv = document.getElementById("partie");
+    if (cell.classList.contains("nenuphare")) {
+      messageDiv.innerHTML = "Partie GAGNE!";
+    } else {
+      messageDiv.innerHTML = "Partie PERDU!";
+    }
+  }
+  console.log("cell=", cell);
 }
 
 // Fonction pour gérer les entrées clavier
@@ -150,7 +179,11 @@ function boucleDeJeu() {
   window.addEventListener("keydown", gestionTouches);
 
   // Répéter la boucle de jeu en utilisant requestAnimationFrame
-  requestAnimationFrame(boucleDeJeu);
+  if (joueur.vivant) {
+    requestAnimationFrame(boucleDeJeu);
+  } else {
+    console.log("PERDU !");
+  }
 }
 
 // Appeler la fonction pour générer le décor au chargement de la page
