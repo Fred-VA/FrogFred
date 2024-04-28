@@ -137,7 +137,6 @@ function deplacerJoueur(direction) {
       nouveauX--;
       break;
     case "ArrowRight":
-      tronc;
       nouveauX++;
       break;
     default:
