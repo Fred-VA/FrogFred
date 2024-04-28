@@ -16,23 +16,23 @@ const decor = [
 ];
 const animation = [
   //     1    2    3    4    5    6    7    8    9   10   11   12   13
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//nenuphare
   ["R", "R", "R", "R", " ", " ", " ", " ", " ", "R", "R", "R", " ", " "],
   [" ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " ", " "],
   [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", "R", "R", "R", " "],
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//berge
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", "M", "M", "M", " ", " ", " ", " ", " ", "M", "M", "M", " "],
+  [" ", " ", "S", "S", " ", " ", "S", "S", " ", "S", "S", " ", " ", " "],
+  [" ", "M", "M", "M", "M", " ", " ", " ", " ", "M", "M", "M", "M", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
 ];
 
-let joueur = { x: 6, y: 5, vivant: true };
-let delaiAnimationMoyen = 0;
+let joueur = { x: 6, y: 12, vivant: true };
 let delaiAnimationRapide = 0;
+let delaiAnimationMoyen = 0;
 let delaiAnimationLent = 0;
 
 // Fonction pour générer le décor en HTML
@@ -64,6 +64,9 @@ function genererDecorHTML() {
         case "M":
           cell.classList.add("camion");
           break;
+        case "S":
+          cell.classList.add("sportive");
+          break;  
         case "B":
           cell.classList.add("berge");
           break;
@@ -98,8 +101,38 @@ function deplacerAnimation() {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("camion");
       }
+      if (animation[y][x] == "S") {
+        let cell = document.getElementById("cell-" + y + "-" + x);
+        cell.classList.add("sportive");
+      }
     }
   }
+  
+  delaiAnimationRapide++;
+  if (delaiAnimationRapide == 10) {
+    let goToStart = false;
+    for (let y = 0; y < animation.length; y++) {
+      goToStart = false;
+      for (let x = 13; x >= 0; x--) {
+        if (animation[y][x] == "S") {
+          if (x < 13) {
+            animation[y][x + 1] = "S";
+          } else {
+            goToStart = true;
+          }
+          animation[y][x] = " ";
+          if (joueur.x == x && joueur.y == y) {
+            joueur.vivant = false;
+          }
+        }
+      }
+      if (goToStart) {
+        animation[y][0] = "S";
+      }
+    }
+    delaiAnimationRapide = 0;
+  }
+
   delaiAnimationLent++;
   if (delaiAnimationLent == 120) {
     let goToEnd = false;
@@ -201,7 +234,7 @@ function deplacerJoueur(direction) {
   }
   let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
   if (cell.classList.contains("tronc") || cell.classList.contains("berge")
-   || (cell.classList.contains("route") && !cell.classList.contains("camion"))) {
+   || (cell.classList.contains("route") && ( !cell.classList.contains("camion") || !cell.classList.contains("sportive")))) {
     joueur.vivant = true;
   } else {
       joueur.vivant = false;
