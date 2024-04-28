@@ -155,7 +155,7 @@ function deplacerJoueur(direction) {
   joueur.x = nouveauX;
   joueur.y = nouveauY;
   let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
-  if (cell.classList.contains("tronc") || cell.classList.contains("berge")) {
+  if (cell.classList.contains("tronc") || cell.classList.contains("berge") || cell.classList.contains("route")) {
     joueur.vivant = true;
   } else {
     joueur.vivant = false;
