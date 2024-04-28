@@ -101,9 +101,9 @@ function deplacerAnimation() {
     }
   }
   delaiAnimationLent++;
-  if(delaiAnimationLent == 120) {
-    let goToEnd =false;
-    for (let y = 0; y < animation.length; y++){
+  if (delaiAnimationLent == 120) {
+    let goToEnd = false;
+    for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
       for (let x = 0; x < animation[y].length; x++) {
         if (animation[y][x] == "M") {
@@ -115,7 +115,6 @@ function deplacerAnimation() {
           animation[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.vivant = false;
-            
           }
         }
       }
@@ -125,9 +124,6 @@ function deplacerAnimation() {
     }
     delaiAnimationLent = 0;
   }
-
-
-
 
   delaiAnimationMoyen++;
   if (delaiAnimationMoyen == 90) {
@@ -175,7 +171,6 @@ function deplacerAnimation() {
   }
 }
 
-
 // Fonction pour gérer les mouvements du joueur
 function deplacerJoueur(direction) {
   let nouveauX = joueur.x;
@@ -198,10 +193,18 @@ function deplacerJoueur(direction) {
     default:
       return;
   }
-  joueur.x = nouveauX;
-  joueur.y = nouveauY;
+  if (nouveauX >= 0 && nouveauX <= 13) {
+    joueur.x = nouveauX;
+  }
+  if (nouveauY >= 0 && nouveauY <= 12) {
+    joueur.y = nouveauY;
+  }
   let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
-  if (cell.classList.contains("tronc") || cell.classList.contains("berge") || cell.classList.contains("route")) {
+  if (
+    cell.classList.contains("tronc") ||
+    cell.classList.contains("berge") ||
+    cell.classList.contains("route")
+  ) {
     joueur.vivant = true;
   } else {
     joueur.vivant = false;
