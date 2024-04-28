@@ -24,7 +24,7 @@ const animation = [
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "M", "M", "M", " "],
+  [" ", " ", "M", "M", "M", " ", " ", " ", " ", " ", "M", "M", "M", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -200,14 +200,11 @@ function deplacerJoueur(direction) {
     joueur.y = nouveauY;
   }
   let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
-  if (
-    cell.classList.contains("tronc") ||
-    cell.classList.contains("berge") ||
-    cell.classList.contains("route")
-  ) {
+  if (cell.classList.contains("tronc") || cell.classList.contains("berge")
+   || (cell.classList.contains("route") && !cell.classList.contains("camion"))) {
     joueur.vivant = true;
   } else {
-    joueur.vivant = false;
+      joueur.vivant = false;
     let messageDiv = document.getElementById("partie");
     if (cell.classList.contains("nenuphare")) {
       messageDiv.innerHTML = "Partie GAGNE!";
