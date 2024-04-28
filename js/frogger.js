@@ -14,13 +14,20 @@ const decor = [
   ["R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R", "R"],
   ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
 ];
-const tronc = [
+const animation = [
   //     1    2    3    4    5    6    7    8    9   10   11   12   13
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   ["R", "R", "R", "R", " ", " ", " ", " ", " ", "R", "R", "R", " ", " "],
   [" ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " ", " "],
   [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", "R", "R", "R", " "],
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
 ];
 
 let joueur = { x: 6, y: 5, vivant: true };
@@ -72,13 +79,13 @@ function genererDecorHTML() {
 }
 
 function deplacerTroncs() {
-  for (let y = 0; y < tronc.length; y++) {
-    for (let x = 0; x < tronc[y].length; x++) {
-      if (tronc[y][x] == "L") {
+  for (let y = 0; y < animation.length; y++) {
+    for (let x = 0; x < animation[y].length; x++) {
+      if (animation[y][x] == "L") {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
       }
-      if (tronc[y][x] == "R") {
+      if (animation[y][x] == "R") {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
       }
@@ -87,48 +94,49 @@ function deplacerTroncs() {
   delaiTronc++;
   if (delaiTronc == 90) {
     let goToEnd = false;
-    for (let y = 0; y < tronc.length; y++) {
+    for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
-      for (let x = 0; x < tronc[y].length; x++) {
-        if (tronc[y][x] == "L") {
+      for (let x = 0; x < animation[y].length; x++) {
+        if (animation[y][x] == "L") {
           if (x > 0) {
-            tronc[y][x - 1] = "L";
+            animation[y][x - 1] = "L";
           } else {
             goToEnd = true;
           }
-          tronc[y][x] = " ";
+          animation[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x - 1;
           }
         }
       }
       if (goToEnd) {
-        tronc[y][13] = "L";
+        animation[y][13] = "L";
       }
     }
     let goToStart = false;
-    for (let y = 0; y < tronc.length; y++) {
+    for (let y = 0; y < animation.length; y++) {
       goToStart = false;
       for (let x = 13; x >= 0; x--) {
-        if (tronc[y][x] == "R") {
+        if (animation[y][x] == "R") {
           if (x < 13) {
-            tronc[y][x + 1] = "R";
+            animation[y][x + 1] = "R";
           } else {
             goToStart = true;
           }
-          tronc[y][x] = " ";
+          animation[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x + 1;
           }
         }
       }
       if (goToStart) {
-        tronc[y][0] = "R";
+        animation[y][0] = "R";
       }
     }
     delaiTronc = 0;
   }
 }
+
 
 // Fonction pour gérer les mouvements du joueur
 function deplacerJoueur(direction) {
