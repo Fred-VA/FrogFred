@@ -16,12 +16,12 @@ const decor = [
 ];
 const animation = [
   //     1    2    3    4    5    6    7    8    9   10   11   12   13
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//nenuphare
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "], //nenuphare
   ["R", "R", "R", "R", " ", " ", " ", " ", " ", "R", "R", "R", " ", " "],
   [" ", " ", "L", "L", "L", "L", " ", " ", "L", "L", "L", " ", " ", " "],
   [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", "R", "R", "R", " "],
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//berge
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "], //berge
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", "S", "S", " ", " ", "S", "S", " ", "S", "S", " ", " ", " "],
   [" ", "M", "M", "M", "M", " ", " ", " ", " ", "M", "M", "M", "M", " "],
@@ -29,6 +29,8 @@ const animation = [
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
 ];
+const X_MAX = 13;
+const Y_MAX = 12;
 
 let joueur = { x: 6, y: 12, vivant: true };
 let delaiAnimationRapide = 0;
@@ -66,7 +68,7 @@ function genererDecorHTML() {
           break;
         case "S":
           cell.classList.add("sportive");
-          break;  
+          break;
         case "B":
           cell.classList.add("berge");
           break;
@@ -107,15 +109,15 @@ function deplacerAnimation() {
       }
     }
   }
-  
+
   delaiAnimationRapide++;
-  if (delaiAnimationRapide == 10) {
+  if (delaiAnimationRapide == 40) {
     let goToStart = false;
     for (let y = 0; y < animation.length; y++) {
       goToStart = false;
-      for (let x = 13; x >= 0; x--) {
+      for (let x = X_MAX; x >= 0; x--) {
         if (animation[y][x] == "S") {
-          if (x < 13) {
+          if (x < X_MAX) {
             animation[y][x + 1] = "S";
           } else {
             goToStart = true;
@@ -152,7 +154,7 @@ function deplacerAnimation() {
         }
       }
       if (goToEnd) {
-        animation[y][13] = "M";
+        animation[y][X_MAX] = "M";
       }
     }
     delaiAnimationLent = 0;
@@ -173,19 +175,22 @@ function deplacerAnimation() {
           animation[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x - 1;
+            if (joueur.x < 0) {
+              joueur.vivant = false;
+            }
           }
         }
       }
       if (goToEnd) {
-        animation[y][13] = "L";
+        animation[y][X_MAX] = "L";
       }
     }
     let goToStart = false;
     for (let y = 0; y < animation.length; y++) {
       goToStart = false;
-      for (let x = 13; x >= 0; x--) {
+      for (let x = X_MAX; x >= 0; x--) {
         if (animation[y][x] == "R") {
-          if (x < 13) {
+          if (x < X_MAX) {
             animation[y][x + 1] = "R";
           } else {
             goToStart = true;
@@ -193,6 +198,9 @@ function deplacerAnimation() {
           animation[y][x] = " ";
           if (joueur.x == x && joueur.y == y) {
             joueur.x = joueur.x + 1;
+            if (joueur.x > X_MAX) {
+              joueur.vivant = false;
+            }
           }
         }
       }
@@ -226,18 +234,23 @@ function deplacerJoueur(direction) {
     default:
       return;
   }
-  if (nouveauX >= 0 && nouveauX <= 13) {
+  if (nouveauX >= 0 && nouveauX <= X_MAX) {
     joueur.x = nouveauX;
   }
-  if (nouveauY >= 0 && nouveauY <= 12) {
+  if (nouveauY >= 0 && nouveauY <= Y_MAX) {
     joueur.y = nouveauY;
   }
   let cell = document.getElementById("cell-" + nouveauY + "-" + nouveauX);
-  if (cell.classList.contains("tronc") || cell.classList.contains("berge")
-   || (cell.classList.contains("route") && ( !cell.classList.contains("camion") || !cell.classList.contains("sportive")))) {
+  if (
+    cell.classList.contains("tronc") ||
+    cell.classList.contains("berge") ||
+    (cell.classList.contains("route") &&
+      (!cell.classList.contains("camion") ||
+        !cell.classList.contains("sportive")))
+  ) {
     joueur.vivant = true;
   } else {
-      joueur.vivant = false;
+    joueur.vivant = false;
     let messageDiv = document.getElementById("partie");
     if (cell.classList.contains("nenuphare")) {
       messageDiv.innerHTML = "Partie GAGNE!";
@@ -261,16 +274,16 @@ function boucleDeJeu() {
   genererDecorHTML();
   deplacerAnimation();
 
-  // Ici vous pourriez ajouter d'autres fonctionnalités de jeu
-
-  // Attacher l'événement pour les touches du clavier
+  // On détecte l'action des touches du clavier
   window.addEventListener("keydown", gestionTouches);
 
-  // Répéter la boucle de jeu en utilisant requestAnimationFrame
+  // permet de synchroniser l'affichage avec le taux de rafraîchissement
   if (joueur.vivant) {
     requestAnimationFrame(boucleDeJeu);
   } else {
     console.log("PERDU !");
+    let messageDiv = document.getElementById("partie");
+    messageDiv.innerHTML = "Partie PERDU!";
   }
 }
 
