@@ -24,7 +24,7 @@ const animation = [
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "M", "M", "M", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -61,6 +61,9 @@ function genererDecorHTML() {
         case "E":
           cell.classList.add("eau");
           break;
+        case "M":
+          cell.classList.add("camion");
+          break;
         case "B":
           cell.classList.add("berge");
           break;
@@ -91,12 +94,41 @@ function deplacerAnimation() {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
       }
-      if (animation[y][x] == "J") {
+      if (animation[y][x] == "M") {
         let cell = document.getElementById("cell-" + y + "-" + x);
-        cell.classList.add("voitureRapide");
+        cell.classList.add("camion");
       }
     }
   }
+  delaiAnimationLent++;
+  if(delaiAnimationLent == 120) {
+    let goToEnd =false;
+    for (let y = 0; y < animation.length; y++){
+      goToEnd = false;
+      for (let x = 0; x < animation[y].length; x++) {
+        if (animation[y][x] == "M") {
+          if (x > 0) {
+            animation[y][x - 1] = "M";
+          } else {
+            goToEnd = true;
+          }
+          animation[y][x] = " ";
+          if (joueur.x == x && joueur.y == y) {
+            joueur.vivant = false;
+            
+          }
+        }
+      }
+      if (goToEnd) {
+        animation[y][13] = "M";
+      }
+    }
+    delaiAnimationLent = 0;
+  }
+
+
+
+
   delaiAnimationMoyen++;
   if (delaiAnimationMoyen == 90) {
     let goToEnd = false;
