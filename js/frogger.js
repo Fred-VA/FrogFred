@@ -31,7 +31,9 @@ const animation = [
 ];
 
 let joueur = { x: 6, y: 5, vivant: true };
-let delaiTronc = 0;
+let delaiAnimationMoyen = 0;
+let delaiAnimationRapide = 0;
+let delaiAnimationLent = 0;
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -78,7 +80,7 @@ function genererDecorHTML() {
   document.getElementById("contenu").appendChild(table);
 }
 
-function deplacerTroncs() {
+function deplacerAnimation() {
   for (let y = 0; y < animation.length; y++) {
     for (let x = 0; x < animation[y].length; x++) {
       if (animation[y][x] == "L") {
@@ -89,10 +91,14 @@ function deplacerTroncs() {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
       }
+      if (animation[y][x] == "J") {
+        let cell = document.getElementById("cell-" + y + "-" + x);
+        cell.classList.add("voitureRapide");
+      }
     }
   }
-  delaiTronc++;
-  if (delaiTronc == 90) {
+  delaiAnimationMoyen++;
+  if (delaiAnimationMoyen == 90) {
     let goToEnd = false;
     for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
@@ -133,7 +139,7 @@ function deplacerTroncs() {
         animation[y][0] = "R";
       }
     }
-    delaiTronc = 0;
+    delaiAnimationMoyen = 0;
   }
 }
 
@@ -188,7 +194,7 @@ function gestionTouches(event) {
 // Boucle de jeu
 function boucleDeJeu() {
   genererDecorHTML();
-  deplacerTroncs();
+  deplacerAnimation();
 
   // Ici vous pourriez ajouter d'autres fonctionnalités de jeu
 
