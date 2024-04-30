@@ -34,9 +34,9 @@ const X_MAX = 13;
 const Y_MAX = 12;
 
 let joueur = { x: 6, y: 12, vivant: true };
-let delaiAnimationRapide = 0;
+let delaiAnimationRapideDroite = 0;
 let delaiAnimationMoyen = 0;
-let delaiAnimationLent = 0;
+let delaiAnimationLentGauche = 0;
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -110,9 +110,9 @@ function deplacerAnimation() {
       }
     }
   }
-
-  delaiAnimationRapide++;
-  if (delaiAnimationRapide == 20) {
+  
+  delaiAnimationRapideDroite++;
+  if (delaiAnimationRapideDroite == 20) {
     let goToStart = false;
     for (let y = 0; y < animation.length; y++) {
       goToStart = false;
@@ -133,11 +133,11 @@ function deplacerAnimation() {
         animation[y][0] = "S";
       }
     }
-    delaiAnimationRapide = 0;
+    delaiAnimationRapideDroite = 0;
   }
 
-  delaiAnimationLent++;
-  if (delaiAnimationLent == 120) {
+  delaiAnimationLentGauche++;
+  if (delaiAnimationLentGauche == 120) {
     let goToEnd = false;
     for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
@@ -158,7 +158,7 @@ function deplacerAnimation() {
         animation[y][X_MAX] = "M";
       }
     }
-    delaiAnimationLent = 0;
+    delaiAnimationLentGauche = 0;
   }
 
   delaiAnimationMoyen++;
