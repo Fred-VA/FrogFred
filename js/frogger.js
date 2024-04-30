@@ -26,9 +26,9 @@ const animation = [
   [" ", " ", "S", "S", " ", " ", "S", "S", " ", "S", "S", " ", " ", " "],
   [" ", "M", "M", "M", "M", " ", " ", " ", " ", "M", "M", "M", "M", " "],
   ["S", " ", " ", " ", "S", "S", " ", " ", "S", "S", " ", " ", " ", "S"],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//berge
+  ["D", " ", "D", "D", "D", " ", " ", "D", "D", "D", " ", " ", "D", "D"],
+  [" ", "S", "S", " ", " ", " ", "S", "S", " ", " ", " ", "S", "S", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "], //berge
 ];
 const X_MAX = 13;
 const Y_MAX = 12;
@@ -37,6 +37,7 @@ let joueur = { x: 6, y: 12, vivant: true };
 let delaiAnimationRapideDroite = 0;
 let delaiAnimationMoyen = 0;
 let delaiAnimationLentGauche = 0;
+let delaiAnimationMoyenVoiture = 0;
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -69,6 +70,9 @@ function genererDecorHTML() {
           break;
         case "S":
           cell.classList.add("sportive");
+          break;
+        case "D":
+          cell.classList.add("voiture");
           break;
         case "B":
           cell.classList.add("berge");
@@ -107,6 +111,10 @@ function deplacerAnimation() {
       if (animation[y][x] == "S") {
         let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("sportive");
+      }
+      if (animation[y][x] == "D") {
+        let cell = document.getElementById("cell-" + y + "-" + x);
+        cell.classList.add("voiture");
       }
     }
   }
@@ -159,6 +167,31 @@ function deplacerAnimation() {
       }
     }
     delaiAnimationLentGauche = 0;
+  }
+  delaiAnimationMoyenVoiture++
+  if (delaiAnimationMoyenVoiture == 60) {
+    let goToEnd = false;
+    for (let y = 0; y < animation.length; y++) {
+      goToEnd = false;
+      for (let x = 0; x < animation[y].length; x++) {
+        if (animation[y][x] == "D") {
+          if (x > 0) {
+            animation[y][x - 1] = "D";
+            if (joueur.x == x - 1 && joueur.y == y) {
+              joueur.vivant = false;
+            }
+          } else {
+            goToEnd = true;
+          }
+          animation[y][x] = " ";
+
+        }
+      }
+      if (goToEnd) {
+        animation[y][X_MAX] = "D";
+      }
+    }
+    delaiAnimationMoyenVoiture = 0;
   }
 
   delaiAnimationMoyen++;
@@ -245,10 +278,8 @@ function deplacerJoueur(direction) {
   if (
     cell.classList.contains("tronc") ||
     cell.classList.contains("berge") ||
-    (cell.classList.contains("route") &&
-      (!cell.classList.contains("camion") ||
-        !cell.classList.contains("sportive")))
-  ) {
+    (cell.classList.contains("route") && !cell.classList.contains("camion") && !cell.classList.contains("sportive") && !cell.classList.contains("voiture")))
+    {
     joueur.vivant = true;
   } else {
     joueur.vivant = false;
@@ -264,30 +295,35 @@ function deplacerJoueur(direction) {
 
 // Fonction pour gérer les entrées clavier
 function gestionTouches(event) {
-  const touche = event.key;
-  console.log("gestionTouches", touche);
-  deplacerJoueur(touche);
-  console.log("gestionTouches", joueur);
+  if (joueur.vivant) {
+    const touche = event.key;
+    console.log("gestionTouches", touche);
+    deplacerJoueur(touche);
+    console.log("gestionTouches", joueur);
+  }
 }
 
 // Boucle de jeu
 function boucleDeJeu() {
   genererDecorHTML();
   deplacerAnimation();
-
-  // On détecte l'action des touches du clavier
-  window.addEventListener("keydown", gestionTouches);
-
-  // permet de synchroniser l'affichage avec le taux de rafraîchissement
+    // On détecte l'action des touches du clavier
+    window.addEventListener("keydown", gestionTouches);
   if (joueur.vivant) {
+
+    // permet de synchroniser l'affichage avec le taux de rafraîchissement
     requestAnimationFrame(boucleDeJeu);
   } else {
     console.log("PERDU !");
+    requestAnimationFrame(finDeJeu);
     let messageDiv = document.getElementById("partie");
     messageDiv.innerHTML = "Partie PERDU!";
   }
 }
-
+function finDeJeu() {
+  genererDecorHTML();
+  deplacerAnimation();
+}
 // Appeler la fonction pour générer le décor au chargement de la page
 window.onload = function () {
   boucleDeJeu();
