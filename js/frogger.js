@@ -25,9 +25,10 @@ const animation = [
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", "S", "S", " ", " ", "S", "S", " ", "S", "S", " ", " ", " "],
   [" ", "M", "M", "M", "M", " ", " ", " ", " ", "M", "M", "M", "M", " "],
+  ["S", " ", " ", " ", "S", "S", " ", " ", "S", "S", " ", " ", " ", "S"],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],//berge
 ];
 const X_MAX = 13;
 const Y_MAX = 12;
@@ -111,7 +112,7 @@ function deplacerAnimation() {
   }
 
   delaiAnimationRapide++;
-  if (delaiAnimationRapide == 40) {
+  if (delaiAnimationRapide == 20) {
     let goToStart = false;
     for (let y = 0; y < animation.length; y++) {
       goToStart = false;
