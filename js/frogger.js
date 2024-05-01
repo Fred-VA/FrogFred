@@ -48,6 +48,7 @@ function genererDecorHTML() {
   }
   const table = document.createElement("table");
   table.setAttribute("id", "tableau");
+  table.classList.add("tableau");
   for (let y = 0; y < decor.length; y++) {
     const row = document.createElement("tr");
     for (let x = 0; x < decor[y].length; x++) {
@@ -118,7 +119,7 @@ function deplacerAnimation() {
       }
     }
   }
-  
+
   delaiAnimationRapideDroite++;
   if (delaiAnimationRapideDroite == 20) {
     let goToStart = false;
@@ -168,7 +169,7 @@ function deplacerAnimation() {
     }
     delaiAnimationLentGauche = 0;
   }
-  delaiAnimationMoyenVoiture++
+  delaiAnimationMoyenVoiture++;
   if (delaiAnimationMoyenVoiture == 60) {
     let goToEnd = false;
     for (let y = 0; y < animation.length; y++) {
@@ -184,7 +185,6 @@ function deplacerAnimation() {
             goToEnd = true;
           }
           animation[y][x] = " ";
-
         }
       }
       if (goToEnd) {
@@ -278,8 +278,11 @@ function deplacerJoueur(direction) {
   if (
     cell.classList.contains("tronc") ||
     cell.classList.contains("berge") ||
-    (cell.classList.contains("route") && !cell.classList.contains("camion") && !cell.classList.contains("sportive") && !cell.classList.contains("voiture")))
-    {
+    (cell.classList.contains("route") &&
+      !cell.classList.contains("camion") &&
+      !cell.classList.contains("sportive") &&
+      !cell.classList.contains("voiture"))
+  ) {
     joueur.vivant = true;
   } else {
     joueur.vivant = false;
@@ -307,10 +310,9 @@ function gestionTouches(event) {
 function boucleDeJeu() {
   genererDecorHTML();
   deplacerAnimation();
-    // On détecte l'action des touches du clavier
-    window.addEventListener("keydown", gestionTouches);
+  // On détecte l'action des touches du clavier
+  window.addEventListener("keydown", gestionTouches);
   if (joueur.vivant) {
-
     // permet de synchroniser l'affichage avec le taux de rafraîchissement
     requestAnimationFrame(boucleDeJeu);
   } else {

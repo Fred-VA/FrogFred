@@ -11,6 +11,8 @@
   background-color: coral;
   width: 32px;
   height: 32px;
+  border-top: 8px coral solid;
+  border-bottom: 8px coral solid;
 }
 .nenuphare {
   background-color: greenyellow;
@@ -21,6 +23,8 @@
   background-color: aqua;
   width: 32px;
   height: 32px;
+  border-top: 8px aqua solid;
+  border-bottom: 8px aqua solid;
 }
 .berge {
   background-color: green;
