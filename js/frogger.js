@@ -33,12 +33,13 @@ const animation = [
 const X_MAX = 13;
 const Y_MAX = 12;
 
-let joueur = { x: 6, y: 12, vivant: true, yMinAtteint:12 };
+let joueur = { x: 6, y: 12, vivant: true, yMinAtteint: 12 };
 let delaiAnimationRapideDroite = 0;
 let delaiAnimationMoyen = 0;
 let delaiAnimationLentGauche = 0;
 let delaiAnimationMoyenVoiture = 0;
 let message = "";
+let score = 0;
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -81,6 +82,8 @@ function genererDecorHTML() {
           break;
         case "V":
           cell.classList.add("victoire");
+          const texte = document.createTextNode("🐸");
+          cell.appendChild(texte);
           break;
         default:
           cell.classList.add("berge");
@@ -94,31 +97,22 @@ function genererDecorHTML() {
     }
     table.appendChild(row);
   }
-  // console.log("table = ", table);
   document.getElementById("contenu").appendChild(table);
 }
 
 function deplacerAnimation() {
   for (let y = 0; y < animation.length; y++) {
     for (let x = 0; x < animation[y].length; x++) {
+      let cell = document.getElementById("cell-" + y + "-" + x);
       if (animation[y][x] == "L") {
-        let cell = document.getElementById("cell-" + y + "-" + x);
         cell.classList.add("tronc");
-      }
-      if (animation[y][x] == "R") {
-        let cell = document.getElementById("cell-" + y + "-" + x);
+      } else if (animation[y][x] == "R") {
         cell.classList.add("tronc");
-      }
-      if (animation[y][x] == "M") {
-        let cell = document.getElementById("cell-" + y + "-" + x);
+      } else if (animation[y][x] == "M") {
         cell.classList.add("camion");
-      }
-      if (animation[y][x] == "S") {
-        let cell = document.getElementById("cell-" + y + "-" + x);
+      } else if (animation[y][x] == "S") {
         cell.classList.add("sportive");
-      }
-      if (animation[y][x] == "D") {
-        let cell = document.getElementById("cell-" + y + "-" + x);
+      } else if (animation[y][x] == "D") {
         cell.classList.add("voiture");
       }
     }
@@ -150,7 +144,6 @@ function deplacerAnimation() {
   }
 }
 
-
 // Fonction pour gérer les mouvements du joueur
 function deplacerJoueur(direction) {
   let nouveauX = joueur.x;
@@ -160,9 +153,9 @@ function deplacerJoueur(direction) {
   switch (direction) {
     case "ArrowUp":
       nouveauY--;
-      if(nouveauY < joueur.yMinAtteint) {
-      joueur.yMinAtteint = nouveauY;
-      updateScore(10);
+      if (nouveauY < joueur.yMinAtteint) {
+        joueur.yMinAtteint = nouveauY;
+        updateScore(10);
       }
       break;
     case "ArrowDown":
@@ -177,15 +170,6 @@ function deplacerJoueur(direction) {
     default:
       return;
   }
-  console.log(
-    "deplacerJoueur DEB X=" +
-      joueur.x +
-      "  Y=" +
-      joueur.y +
-      "   vivant = " +
-      joueur.vivant
-  );
-
   if (nouveauX >= 0 && nouveauX <= X_MAX) {
     joueur.x = nouveauX;
   }
@@ -221,14 +205,6 @@ function deplacerJoueur(direction) {
     joueur.vivant = false;
     message = "Dommage, c'est perdu...";
   }
-  console.log(
-    "deplacerJoueur FIN X=" +
-      joueur.x +
-      "  Y=" +
-      joueur.y +
-      "   vivant = " +
-      joueur.vivant
-  );
 }
 
 // Fonction pour gérer les entrées clavier
@@ -277,6 +253,7 @@ function moveGauche(codeObjet, isTronc) {
           animation[y][x - 1] = codeObjet;
           if (!isTronc && joueur.x == x - 1 && joueur.y == y) {
             joueur.vivant = false;
+            message = "Perdu, la grenouille c'est faite écrasée.";
           }
         } else {
           goToEnd = true;
@@ -286,6 +263,7 @@ function moveGauche(codeObjet, isTronc) {
           joueur.x = joueur.x - 1;
           if (joueur.x < 0) {
             joueur.vivant = false;
+            message = "Perdu, la grenouille a quitté le jeu.";
           }
         }
       }
@@ -306,6 +284,7 @@ function moveDroite(codeObjet, isTronc) {
           animation[y][x + 1] = codeObjet;
           if (!isTronc && joueur.x == x + 1 && joueur.y == y) {
             joueur.vivant = false;
+            message = "Perdu, la grenouille c'est faite écrasée.";
           }
         } else {
           goToStart = true;
@@ -315,6 +294,7 @@ function moveDroite(codeObjet, isTronc) {
           joueur.x = joueur.x + 1;
           if (joueur.x > X_MAX) {
             joueur.vivant = false;
+            message = "Perdu, la grenouille a abandonné la partie.";
           }
         }
       }
@@ -325,11 +305,7 @@ function moveDroite(codeObjet, isTronc) {
   }
 }
 
-
-let score = 0;
-
 function updateScore(points) {
   score += points;
-  
   document.getElementById("score").innerHTML = "score :" + score;
 }

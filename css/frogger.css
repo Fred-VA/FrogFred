@@ -1,53 +1,45 @@
 .tableau {
   border-collapse: collapse;
 }
+
+td {
+  text-align: center;
+  width: 32px;
+  height: 32px;
+}
 .falaise {
   background-color: gray;
-  width: 32px;
-  height: 32px;
 }
 
-.route {
-  background-color: coral;
-  width: 32px;
-  height: 32px;
-  border-top: 8px coral solid;
-  border-bottom: 8px coral solid;
-}
-.nenuphare {
-  background-color: greenyellow;
-  width: 32px;
-  height: 32px;
-}
-.victoire {
-  background-color: green;
-  width: 32px;
-  height: 32px;
-}
 .eau {
   background-color: aqua;
-  width: 32px;
-  height: 32px;
   border-top: 8px aqua solid;
   border-bottom: 8px aqua solid;
 }
+.route {
+  background-color: coral;
+  border-top: 8px coral solid;
+  border-bottom: 8px coral solid;
+}
+
+.nenuphare {
+  background-color: greenyellow;
+}
+.victoire {
+  background-color: green;
+}
 .berge {
   background-color: green;
-  width: 32px;
-  height: 32px;
 }
 .tronc {
   background-color: brown !important;
 }
-
 .camion {
   background-color: yellow !important;
 }
-
 .sportive {
   background-color: beige !important;
 }
-
 .voiture {
   background-color: blue !important;
 }
