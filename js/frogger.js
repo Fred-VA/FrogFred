@@ -33,11 +33,12 @@ const animation = [
 const X_MAX = 13;
 const Y_MAX = 12;
 
-let joueur = { x: 6, y: 12, vivant: true };
+let joueur = { x: 6, y: 6, vivant: true };
 let delaiAnimationRapideDroite = 0;
 let delaiAnimationMoyen = 0;
 let delaiAnimationLentGauche = 0;
 let delaiAnimationMoyenVoiture = 0;
+let message = "";
 
 // Fonction pour générer le décor en HTML
 function genererDecorHTML() {
@@ -77,6 +78,9 @@ function genererDecorHTML() {
           break;
         case "B":
           cell.classList.add("berge");
+          break;
+        case "V":
+          cell.classList.add("victoire");
           break;
         default:
           cell.classList.add("berge");
@@ -168,6 +172,15 @@ function deplacerJoueur(direction) {
     default:
       return;
   }
+  console.log(
+    "deplacerJoueur DEB X=" +
+      joueur.x +
+      "  Y=" +
+      joueur.y +
+      "   vivant = " +
+      joueur.vivant
+  );
+
   if (nouveauX >= 0 && nouveauX <= X_MAX) {
     joueur.x = nouveauX;
   }
@@ -175,34 +188,50 @@ function deplacerJoueur(direction) {
     joueur.y = nouveauY;
   }
   let cell = document.getElementById("cell-" + joueur.y + "-" + joueur.x);
-  if (
-    cell.classList.contains("tronc") ||
-    cell.classList.contains("berge") ||
-    (cell.classList.contains("route") &&
-      !cell.classList.contains("camion") &&
-      !cell.classList.contains("sportive") &&
-      !cell.classList.contains("voiture"))
-  ) {
-    joueur.vivant = true;
-  } else {
-    joueur.vivant = false;
-    let messageDiv = document.getElementById("partie");
-    if (cell.classList.contains("nenuphare")) {
-      messageDiv.innerHTML = "Partie GAGNE!";
-    } else {
-      messageDiv.innerHTML = "Partie PERDU!";
+
+  if (cell.classList.contains("nenuphare")) {
+    decor[0][joueur.x] = "V";
+    let nombreDeVictoire = 0;
+    for (let x = 0; x < decor[0].length; x++) {
+      if (decor[0][x] == "V") {
+        nombreDeVictoire++;
+      }
     }
+    if (nombreDeVictoire == 4) {
+      message = "Bravo c'est une Victoire !!!";
+      joueur.vivant = false;
+    } else {
+      joueur.x = 6;
+      joueur.y = 6;
+    }
+  } else if (
+    (cell.classList.contains("eau") && !cell.classList.contains("tronc")) ||
+    cell.classList.contains("victoire") ||
+    cell.classList.contains("falaise") ||
+    cell.classList.contains("camion") ||
+    cell.classList.contains("sportive") ||
+    cell.classList.contains("voiture")
+  ) {
+    joueur.vivant = false;
+    message = "Dommage, c'est perdu...";
   }
-  console.log("cell=", cell);
+  console.log(
+    "deplacerJoueur FIN X=" +
+      joueur.x +
+      "  Y=" +
+      joueur.y +
+      "   vivant = " +
+      joueur.vivant
+  );
 }
 
 // Fonction pour gérer les entrées clavier
 function gestionTouches(event) {
   if (joueur.vivant) {
     const touche = event.key;
-    console.log("gestionTouches", touche);
+    // console.log("gestionTouches", touche);
     deplacerJoueur(touche);
-    console.log("gestionTouches", joueur);
+    // console.log("gestionTouches", joueur);
   }
 }
 
@@ -216,10 +245,10 @@ function boucleDeJeu() {
     // permet de synchroniser l'affichage avec le taux de rafraîchissement
     requestAnimationFrame(boucleDeJeu);
   } else {
-    console.log("PERDU !");
+    console.log("Fin de partie...");
     requestAnimationFrame(finDeJeu);
     let messageDiv = document.getElementById("partie");
-    messageDiv.innerHTML = "Partie PERDU!";
+    messageDiv.innerHTML = message;
   }
 }
 function finDeJeu() {
