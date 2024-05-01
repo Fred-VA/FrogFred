@@ -87,7 +87,7 @@ function genererDecorHTML() {
       }
       cell.setAttribute("id", "cell-" + y + "-" + x);
       if (x == joueur.x && y == joueur.y) {
-        const texte = document.createTextNode("X");
+        const texte = document.createTextNode("🐸");
         cell.appendChild(texte);
       }
       row.appendChild(cell);
