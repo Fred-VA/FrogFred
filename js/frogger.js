@@ -22,7 +22,7 @@ const animation = [
   [" ", " ", "R", "R", "R", "R", "R", " ", " ", " ", "R", "R", "R", " "],
   [" ", " ", " ", "L", "L", "L", "L", " ", " ", " ", "L", "L", "L", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "], //berge
-  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+  [" ", " ", " ", "D", "D", "D", " ", " ", " ", "D", "D", "D", " ", " "],
   [" ", " ", "S", "S", " ", " ", "S", "S", " ", "S", "S", " ", " ", " "],
   [" ", "M", "M", "M", "M", " ", " ", " ", " ", "M", "M", "M", "M", " "],
   ["S", " ", " ", " ", "S", "S", " ", " ", "S", "S", " ", " ", " ", "S"],
@@ -33,7 +33,7 @@ const animation = [
 const X_MAX = 13;
 const Y_MAX = 12;
 
-let joueur = { x: 6, y: 6, vivant: true };
+let joueur = { x: 6, y: 12, vivant: true, yMinAtteint:12 };
 let delaiAnimationRapideDroite = 0;
 let delaiAnimationMoyen = 0;
 let delaiAnimationLentGauche = 0;
@@ -150,6 +150,7 @@ function deplacerAnimation() {
   }
 }
 
+
 // Fonction pour gérer les mouvements du joueur
 function deplacerJoueur(direction) {
   let nouveauX = joueur.x;
@@ -159,6 +160,10 @@ function deplacerJoueur(direction) {
   switch (direction) {
     case "ArrowUp":
       nouveauY--;
+      if(nouveauY < joueur.yMinAtteint) {
+      joueur.yMinAtteint = nouveauY;
+      updateScore(10);
+      }
       break;
     case "ArrowDown":
       nouveauY++;
@@ -202,7 +207,8 @@ function deplacerJoueur(direction) {
       joueur.vivant = false;
     } else {
       joueur.x = 6;
-      joueur.y = 6;
+      joueur.y = 12;
+      joueur.yMinAtteint = 12;
     }
   } else if (
     (cell.classList.contains("eau") && !cell.classList.contains("tronc")) ||
@@ -317,4 +323,13 @@ function moveDroite(codeObjet, isTronc) {
       animation[y][0] = codeObjet;
     }
   }
+}
+
+
+let score = 0;
+
+function updateScore(points) {
+  score += points;
+  
+  document.getElementById("score").innerHTML = "score :" + score;
 }
