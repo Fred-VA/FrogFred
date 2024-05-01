@@ -121,7 +121,7 @@ function deplacerAnimation() {
   }
 
   delaiAnimationRapideDroite++;
-  if (delaiAnimationRapideDroite == 20) {
+  if (delaiAnimationRapideDroite == 50) {
     let goToStart = false;
     for (let y = 0; y < animation.length; y++) {
       goToStart = false;
@@ -170,7 +170,7 @@ function deplacerAnimation() {
     delaiAnimationLentGauche = 0;
   }
   delaiAnimationMoyenVoiture++;
-  if (delaiAnimationMoyenVoiture == 60) {
+  if (delaiAnimationMoyenVoiture == 90) {
     let goToEnd = false;
     for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
@@ -195,7 +195,7 @@ function deplacerAnimation() {
   }
 
   delaiAnimationMoyen++;
-  if (delaiAnimationMoyen == 90) {
+  if (delaiAnimationMoyen == 120) {
     let goToEnd = false;
     for (let y = 0; y < animation.length; y++) {
       goToEnd = false;
@@ -330,3 +330,26 @@ function finDeJeu() {
 window.onload = function () {
   boucleDeJeu();
 };
+
+function moveDroite(codeObjet) {
+  let goToEnd = false;
+  for (let y = 0; y < animation.length; y++) {
+    goToEnd = false;
+    for (let x = 0; x < animation[y].length; x++) {
+      if (animation[y][x] == codeObjet) {
+        if (x > 0) {
+          animation[y][x - 1] = codeObjet;
+          if (joueur.x == x - 1 && joueur.y == y) {
+            joueur.vivant = false;
+          }
+        } else {
+          goToEnd = true;
+        }
+        animation[y][x] = " ";
+      }
+    }
+    if (goToEnd) {
+      animation[y][X_MAX] = codeObjet;
+    }
+  }
+}
